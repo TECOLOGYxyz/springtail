@@ -48,7 +48,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
 
     boxes = []
 
-    # convert bounding boxes to shapely polygons. We need to invert Y and find polygon vertices from center points
+    # convert bounding boxes to shapely polygons. Invert Y and find polygon vertices from center points
     for row in anno.iterrows():
         x1 = row[1]['x1'] - (row[1]['w']/2)
         y1 = (imgDim[1] - (row[1]['y1']) - row[1]['h']/2)
@@ -84,11 +84,11 @@ def slice(basename, img, imgDim, anno, xs, ys):
                     
                     x, y = new_box.exterior.coords.xy # get coordinates of polygon vertices
                     
-                    new_width = (max(x) - min(x)) / split_width #imgDim[0] # get bounding box width and height normalized to slice size
-                    new_height = (max(y) - min(y)) / split_height #imgDim[1]
+                    new_width = (max(x) - min(x)) / split.shape[1] #imgDim[0] # get bounding box width and height normalized to slice size
+                    new_height = (max(y) - min(y)) / split.shape[0] #imgDim[1]
                     
-                    new_x = (centre.coords.xy[0][0] - xmin) / split_width # Normalize central x and invert y for yolo format
-                    new_y = (ymin - centre.coords.xy[1][0]) / split_height
+                    new_x = (centre.coords.xy[0][0] - xmin) / split.shape[1] # Normalize center x and invert y for yolo format
+                    new_y = (ymin - centre.coords.xy[1][0]) / split.shape[0]
 
                     print(f'Old x {centre.coords.xy[0][0]}; New x {new_x}. Xmin was {xmin}.')
                     print(f'Old y {centre.coords.xy[1][0]}; New y {new_y}. Ymin was {ymin}')
