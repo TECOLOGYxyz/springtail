@@ -33,7 +33,6 @@ def start_points(dim, slice_size):
     for i in range(splits):
         l.append(int(((slice_size)-surplusPerSlice)*c))
         c += 1
-    print("L looks like this: ", l)
     return l
 
 
@@ -46,9 +45,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
     # we need to rescale coordinates from 0-1 to real image height and width
     anno[['x1', 'w']] = anno[['x1', 'w']] * imgDim[0]
     anno[['y1', 'h']] = anno[['y1', 'h']] * imgDim[1]
-    print("Annotations: ")
-    print(anno)
-    print("---")
+
     boxes = []
 
     # convert bounding boxes to shapely polygons. We need to invert Y and find polygon vertices from center points
@@ -57,9 +54,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
         y1 = (imgDim[1] - (row[1]['y1']) - row[1]['h']/2)
         x2 = row[1]['x1'] + (row[1]['w']/2)
         y2 = (imgDim[1] - (row[1]['y1']) + row[1]['h']/2)
-        print("Box: ")
-        print(x1, y1, x2, y2)
-        print("---")
+
         boxes.append((int(row[1]['class']), Polygon([(x1, y1), (x2, y1), (x2, y2), (x1, y2)])))
     #print("Main boxes: ", boxes)
 
@@ -69,15 +64,11 @@ def slice(basename, img, imgDim, anno, xs, ys):
             cv2.imwrite(r'C:\Users\au309263\Desktop\tempCandida\slicedTrain/{}_{}_{}.{}'.format(basename, suffix, count, frmt), split)
             print(f'Image slice _{count}_ written')
             
-
             xmin =  j
             ymin = imgDim[1] - i
             xmax = j + split_width
             ymax = imgDim[1] - i - split_height
-            
-            print("Slice box: ")
-            print(xmin, ymin, xmax, ymax)
-            print("---")
+
             pol = Polygon([(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)])
 
             slice_labels = []
@@ -96,7 +87,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
                     new_width = (max(x) - min(x)) / split_width #imgDim[0] # get bounding box width and height normalized to slice size
                     new_height = (max(y) - min(y)) / split_height #imgDim[1]
                     
-                    new_x = (centre.coords.xy[0][0] - xmin) / split_width # we have to normalize central x and invert y for yolo format
+                    new_x = (centre.coords.xy[0][0] - xmin) / split_width # Normalize central x and invert y for yolo format
                     new_y = (ymin - centre.coords.xy[1][0]) / split_height
 
                     print(f'Old x {centre.coords.xy[0][0]}; New x {new_x}. Xmin was {xmin}.')
