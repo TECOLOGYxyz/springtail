@@ -7,6 +7,7 @@ Find contours
 Generate bounding boxes
 Output yolo annotations format
 """
+
 #from cmath import inf
 #import pandas as pd
 from pyexpat.errors import XML_ERROR_INCOMPLETE_PE
@@ -22,7 +23,7 @@ import numpy as np
 import os
 import shutil
 
-filePath = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\x_20220127'
+filePath = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\x_20230127'
 
 filesOrig = [i for i in os.listdir(filePath) if i.endswith(".jpg")]
 filesWhite = [i for i in os.listdir(filePath) if i.endswith(".tif")]
@@ -66,8 +67,37 @@ def generateBB(origName, white):
             hYolo = round(h/whiteBinHeight, 4)
 
             wYolo += wYolo*0.1 # Expand yolo detections with 10%
-            hYolo += hYolo*0.1
             
+            d = xYolo + (wYolo/2) - 1
+            if d > 0:
+                print("d ", d)
+                wYolo -= d
+            
+            d = xYolo - (wYolo/2)
+            if d < 0:
+                print("d ", d)
+                wYolo += d
+            
+            d = yYolo + (hYolo/2) - 1
+            if d > 0:
+                print("d ", d)
+                hYolo -= d
+            
+            d = yYolo - (wYolo/2)
+            if d < 0:
+                print("d ", d)
+                hYolo += d
+
+            # if xYolo + (wYolo/2) > 1:
+            #     wYolo -= wYolo - 1
+            # if xYolo - (wYolo/2) < 0:
+            #     wYolo += abs(xYolo-(wYolo/2))
+
+            # hYolo += hYolo*0.1
+            # if yYolo + (hYolo/2) > 1:
+            #     hYolo -= hYolo - 1
+            # if yYolo - (hYolo/2) < 0:
+            #     hYolo += abs(yYolo-(hYolo/2))
             
             f.write(f'{clas} {xYolo} {yYolo} {wYolo} {hYolo}\n')
         
