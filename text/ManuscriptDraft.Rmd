@@ -52,7 +52,7 @@ word_comment <- function(comment, highlight = "") {
 
 Title:
 
-**Detecting small objects and many of them: Using computer vision and deep learning to automate counting of collembola in petri dish samples**
+**Detecting small objects and many of them: Computer vision and deep learning enables high-throughput counting of collembola in petri dish samples**
 
 # 
 
@@ -97,6 +97,11 @@ Word count: 0
 
 # Abstract
 
+Requires manual counting of 
+
+Recent advances in computer vision and deep learning methods enable automation of image analysis including detection of objects of interest.
+
+
 Here's the abstract.
 
 
@@ -105,6 +110,18 @@ Here's the abstract.
 
 
 # Introduction
+
+
+
+Ecotoxiological laboratory studies on soil invertebrates deliver important assessments of compound toxicities.
+
+
+Manual live counts problematic because of movement of individuals.
+Counting based on images can alleviate this problem.
+Images also allow validation of counts.
+
+
+
 
 
 -Why do we need to count collembola in petri dishes
