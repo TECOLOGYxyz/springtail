@@ -4,10 +4,21 @@ import os
 import pandas as pd
 from shapely.geometry import Polygon
 from PIL import Image
-
+from math import floor, ceil
+import time
 
 split_width = 640
 split_height = 640
+
+
+def roundUp(n, d=6):
+    """
+    Round up last decimal of float
+    """
+    d = int('1' + ('0' * d))
+    r = ceil(n * d) / d
+    print(n, "rounded up to ", r)
+    return r
 
 
 def start_points(dim, slice_size):
@@ -61,7 +72,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
     for i in ys:
         for j in xs:
             split = img[i:i+split_height, j:j+split_width]
-            cv2.imwrite(r'C:\Users\au309263\Desktop\tempCandida\debug/slice/{}_{}_{}.{}'.format(basename, suffix, count, frmt), split)
+            cv2.imwrite(r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\tempCandida\slicedTrain/{}_{}_{}.{}'.format(basename, suffix, count, frmt), split)
             #print(f'Image slice _{count}_ written')
             
             xmin =  j
@@ -72,7 +83,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
             pol = Polygon([(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)])
 
             slice_labels = []
-            slice_labels_path = r'C:\Users\au309263\Desktop\tempCandida\debug/slice/{}_{}_{}.txt'.format(basename, suffix, count)
+            slice_labels_path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\tempCandida\slicedTrain/{}_{}_{}.txt'.format(basename, suffix, count)
             for box in boxes:
                 if pol.intersects(box[1]):
                     inter = pol.intersection(box[1])        
@@ -95,43 +106,33 @@ def slice(basename, img, imgDim, anno, xs, ys):
                     if (new_width * split.shape[1] < 1) | (new_height * split.shape[0] < 1):
                         continue
                     
-                    d = new_x + (new_width/2) - 1
+                    d = new_x + (new_width/2) - 1 # If box overlaps right image boundary
                     if d > 0:
-                        print(slice_labels_path)
-                        print("d ", d)
-                        print("x before: ", new_x)
-                        new_x -= d
-                        new_x = round(new_x, 6)
-                        print("x after: ", new_x)
-                    
-                    d = new_x - (new_width/2)
+                        print("Box overlaps right boundary")
+                        print("x before ", new_x)
+                        new_x = 1 - roundUp(new_width/2)
+                        print("x after ", new_x)
+
+                    d = new_x - (new_width/2) # If box overlaps left image boundary
                     if d < 0:
-                        print(slice_labels_path)
-                        print("d ", d)
-                        print("x before: ", new_x)
-                        new_x -= d
-                        new_x = round(new_x, 6)
-                        print("x after: ", new_x)
+                        print("Box overlaps left boundary")
+                        print("x before ", new_x)
+                        new_x = roundUp(new_width/2)
+                        print("x after ", new_x)
 
-
-
-                    d = new_y + (new_height/2) - 1
+                    d = new_y + (new_height/2) - 1 # If box overlaps top image boundary
                     if d > 0:
-                        print(slice_labels_path)
-                        print("d ", d)
-                        print("x before: ", new_y)
-                        new_y -= d
-                        new_y = round(new_y, 6)
-                        print("x after: ", new_y)
+                        print("Box overlaps top boundary")
+                        print("y before ", new_y)
+                        new_y = 1 - roundUp(new_height/2)
+                        print("y after ", new_y)
 
-                    d = new_y - (new_height/2)
+                    d = new_y - (new_height/2) # If box overlaps bottom image boundary
                     if d < 0:
-                        print(slice_labels_path)
-                        print("d ", d)
-                        print("x before: ", new_y)
-                        new_y -= d
-                        new_y = round(new_y, 6)
-                        print("x after: ", new_y)
+                        print("Box overlaps bottom boundary")
+                        print("y before ", new_y)
+                        new_y = roundUp(new_height/2)
+                        print("y after ", new_y)                           
 
 
                     slice_labels.append([box[0], new_x, new_y, new_width, new_height])
@@ -141,7 +142,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
             count += 1    
 
 
-path = r'C:\Users\au309263\Desktop\tempCandida\debug/orig'
+path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\tempCandida\train'
 imgPaths = [os.path.join(path, i) for i in os.listdir(path) if i.endswith('.jpg')]
 
 for image in imgPaths:
