@@ -6,9 +6,9 @@ import os
 # SAHI outputs predictions in .pickle files. Below we convert these to text files in yolov5 format.
 # """
 
-# pathPickles = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705_s256\pickles'
+# pathPickles = r"C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/pickle"
 # pickles = [os.path.join(pathPickles, i) for i in os.listdir(pathPickles)]
-# factor = 1280
+# #factor = 640
 
 # for p in pickles:
 #     pick = pd.read_pickle(p)
@@ -26,10 +26,10 @@ import os
 #             ymax = l['maxy']
 
 #             c = 0
-#             xc = ((xmin + xmax)/2)/factor
-#             yc = ((ymin + ymax)/2)/factor
-#             w = (xmax - xmin)/factor
-#             h = (ymax - ymin)/factor
+#             xc = ((xmin + xmax)/2)/5967 #/factor
+#             yc = ((ymin + ymax)/2)/7385 #/factor
+#             w = (xmax - xmin)/5967#/factor
+#             h = (ymax - ymin)/7385#/factor
             
 #             f.write(f'{c} {xc} {yc} {w} {h}\n')
             
@@ -112,8 +112,7 @@ def yolofile_to_lists(path, file):
 
 
 ##### DEFINE SOME VARIABLES #####
-factor = 1280
-thres = 0.3
+thres = 0.2
 
 d = 0 # detections
 a = 0 # annotations
@@ -121,15 +120,15 @@ cp = 0 # correct predictions
 fp = 0 # false positive
 fn = 0 # false negatives
 
-#pathAnno = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\training\test'
-pathAnno = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\HjalteTest\anno'
+#pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\sliced\test'
+pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/anno'
 annotations = [i for i in os.listdir(pathAnno) if i.endswith('.txt')]
 
 # Pickles:
 #pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705_s64\pickles'
 
 #pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705\runs\detect\1280_e705\labels'
-pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\HjalteTest\det'
+pathDet = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/pickle'
 detections = [i for i in os.listdir(pathDet) if i.endswith('.txt')]
 
 
