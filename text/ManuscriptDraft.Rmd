@@ -261,15 +261,17 @@ objects. Training length was set to 1000 epochs with early stopping with
 a patience of 100 epochs. Confidence threshold for prediction set to
 0.1. Non-maximum suppression IOU threshold set to 0.45.
 
-Evaluating detection performance Since YOLOv5+SAHI has a different
-output format than YOLOv5 on its own, customs scripts were created to 1)
-translate YOLOv5 output pickle files to standard YOLOv5 text files and
-2) calculate detection performance variables (precision and recall) for
-both methods. Precision is the number of correct predictions out of all
-predictions made. Recall is the proportion of the true number of objects
-that were detected by the model. F1 is the weighted average of precision
-and recall. A value of 0.3 was used as the IOU threshold for whether
-bounding boxes overlapped sufficiently to be considered correct.
+Evaluating detection performance
+
+Since YOLOv5+SAHI has a different output format than YOLOv5 on its own,
+customs scripts were created to 1) translate YOLOv5 output pickle files
+to standard YOLOv5 text files and 2) calculate detection performance
+variables (precision and recall) for both methods. Precision is the
+number of correct predictions out of all predictions made. Recall is the
+proportion of the true number of objects that were detected by the
+model. F1 is the weighted average of precision and recall. A value of
+0.3 was used as the IOU threshold for whether bounding boxes overlapped
+sufficiently to be considered correct.
 
 ## Resolution per petri dish
 
@@ -293,23 +295,20 @@ petri dish in each image.
 
 ### Standard approach
 
+The model trained on the standard images reached best validation
+accuracy at epoch xxx.
+
 ### Slicing
 
-The model trained on the 640x640 pixel images reached best validation
-accuracy at epoch 505. The model trained on the 1280x1280 pixel images
-reached best validation accuracy at epoch 705. Table 1 Detection
-accuracy with the different models. Method (IOU 0.3) Precision Recall F1
-YOLOv5 640 0.46 0.19 0.27 YOLOv5 640 + SAHI (128) 0.60 0.12 0.20 YOLOv5
-1280 0.54 0.56 0.55 YOLOv5 1280 + SAHI (128) 0.63 0.41 0.50
+The model trained on the sliced images reached best validation accuracy
+at epoch xxx.
 
-Table 2 Detection accuracy of YOLOv5 1280 + SAHI with different window
-sizes for the SAHI slicing (256, 128, 64). Model 1280 SAHI 256 SAHI 128
-SAHI 64 IOU 0.3 Precision Recall Precision Recall Precision Recall 0.57
-0.47 0.63 0.41 0.66 0.41
+Running inference on image slices with
 
-Fig. 1 Example of image with challenging background. Result from model
-640 + SAHI 128. For this image, the precision was 0.16 and the recall
-0.83.
+Table 1 Detection accuracy with the different models. Method (IOU 0.3)
+Precision Recall F1 YOLOv5 640 0.46 0.19 0.27 YOLOv5 640 + SAHI (128)
+0.60 0.12 0.20 YOLOv5 1280 0.54 0.56 0.55 YOLOv5 1280 + SAHI (128) 0.63
+0.41 0.50
 
 Fig. 2 Example image from test data set. Green bounding boxes are ground
 truth annotations derived from the binary images. Red boxes are
@@ -323,9 +322,9 @@ without application of SAHI (128x128 window size). P: precision, r:
 recall.
 
 Table 3 Variation in performance between images (YOLOv5 1280 + SAHI
-128). Image Precision Recall A11.1 0.78 1.0 A17.1 0.54 0.79 A31.1 0.42
-0.71 A38.1 0.73 0.50 A49.1 0.10 1.0 A6.1 0.60 0.78 B37.1 0.53 0.39 C3.1
-0.48 0.85 C7.3 0.62 0.68 D23.1 0.82 0.44 D4.1 0.20 0.20 D9.1 0.66 0.09
+128).
+
+Image Precision Recall
 
 # Discussion
 
