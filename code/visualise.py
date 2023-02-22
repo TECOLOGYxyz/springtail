@@ -1,63 +1,103 @@
-import cv2, os, csv
-
-factor = 1280
-
-pathImgs = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\HjalteTest\img'
-pathAnno = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\HjalteTest\anno'
-#pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705\runs\detect\1280_e705\labels'
-pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\HjalteTest\det'
+import cv2
+import os
+import csv
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
-imgs = [i for i in os.listdir(pathImgs) if i.endswith(".jpg")]
-annotations = [i for i in os.listdir(pathAnno) if i.endswith(".txt")]
-detections = [i for i in os.listdir(pathDet) if i.endswith(".txt")]
+# Load data
+# scores = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\scores.txt'
+# resolutions = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\petripixels\petriPixels.txt'
+# objects = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\objects.txt'
 
-def yolofile_to_lists(path, file):
-    with open(os.path.join(path, file)) as fd:
-            freader = csv.reader(fd, delimiter='\t') 
-            l = []
-            for ld in freader:
-                l.append([float(i) for i in ld[0].split(" ")])
-            return l
+# scores = pd.read_csv(scores)
+# resolutions = pd.read_csv(resolutions)
+# objects = pd.read_csv(objects)
 
+# print(scores)
+# print(resolutions)
+# # Merge
+# x = scores.merge(resolutions, how = 'inner')
+# x = x.merge(objects, how = 'inner')
 
-def yolo_to_poly(box):
-    """
-    #YOLOv5 annotations are xc, yc, w, h (standardized to image dimensions)
-    #This converts to xmin, ymin, xmax, ymax
-
-    """
-    xc, yc, w, h = int(box[1]*factor), int(box[2]*factor), int(box[3]*factor), int(box[4]*factor) # First item in list ignored skipped as this is the object class
-
-    xmin = int(xc-(w/2))
-    ymin = int(yc-(h/2))
-    xmax = int(xc+(w/2))
-    ymax = int(yc+(h/2))
-
-    return [xmin, ymin, xmax, ymax]
+# x['f1'] = 2*((x['precision']*x['recall'])/(x['precision']+x['recall']))
 
 
-for i in imgs:
-    print("yep")
-    im = cv2.imread(os.path.join(pathImgs, i))
-    ib = os.path.splitext(os.path.basename(i))[0]
-    
-    for ann in annotations:
-        if ann.startswith(ib):
-            listAnno = yolofile_to_lists(pathAnno, ann)
-    for det in detections:
-        if det.startswith(ib):
-            listDet = yolofile_to_lists(pathDet, det)
+# d = {"A":1,
+#     "B":2,
+#     "C":3,
+#     "D":4}
+
+# group = x['image'].str[:1]
+# group = [d[k] for k in group]
+
+# x['id'] = group
+# print(x)
+# # Plot
+# #f = plt.figure()    
+# f, axes = plt.subplots(nrows = 3, ncols = 1, sharex=True)
+
+# axes[0].scatter(x['petriPixels'], x['precision'], s = x['objects'], c = x['id'])
 
 
-    for b in listAnno:
-        col = (0, 255, 0)
-        b = yolo_to_poly(b)
-        cv2.rectangle(im,(b[0]-1,b[1]-1),(b[2]+1,b[3]+1),col,1)
+# # for i, txt in enumerate(x['id']):
+# #     axes[0].annotate(x['image'], (x['petriPixels'], x['precision']))
 
-    for b in listDet:
-        col = (0, 0, 255)
-        b = yolo_to_poly(b)
-        cv2.rectangle(im,(b[0]-4,b[1]-4),(b[2]+4,b[3]+4),col,1)
-    
-    cv2.imwrite(os.path.join(pathImgs, "bb_" + ib + ".jpg"), im)
+# axes[1].scatter(x['petriPixels'], x['recall'], s = x['objects'], c = x['id'], facecolor = None)
+# axes[2].scatter(x['petriPixels'], x['f1'], s = x['objects'], c = x['id'])
+
+
+# annotations=x['image'].tolist()
+# print(annotations)
+# print("hello")
+
+# for i, label in enumerate(annotations):
+#     plt.annotate(label, (x['petriPixels'][i], x['objects'][i]))
+
+
+
+# plt.show()
+
+
+# ###
+# f, axes = plt.subplots(nrows = 3, ncols = 1, sharex=True)
+
+# axes[0].scatter(x['objects'], x['precision'], c = x['id'])
+# axes[1].scatter(x['objects'], x['recall'], c = x['id'], facecolor = None)
+# axes[2].scatter(x['objects'], x['f1'], c = x['id'])
+
+
+# annotations=x['image'].tolist()
+# print(annotations)
+# print("hello")
+
+# for i, label in enumerate(annotations):
+#     plt.annotate(label, (x['petriPixels'][i], x['objects'][i]))
+
+
+
+# plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

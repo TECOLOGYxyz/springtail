@@ -1,13 +1,14 @@
 import motmetrics as mm
 import pandas as pd
 import os
+import cv2
 
 # """
 # SAHI outputs predictions in .pickle files. Below we convert these to text files in yolov5 format.
 # """
 
-# pathPickles = r"C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/pickle"
-# pickles = [os.path.join(pathPickles, i) for i in os.listdir(pathPickles)]
+# pathPickles = r"C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\pickles"
+# pickles = [os.path.join(pathPickles, i) for i in os.listdir(pathPickles) if i.endswith(".pickle")]
 # #factor = 640
 
 # for p in pickles:
@@ -15,6 +16,12 @@ import os
 #     print(p)
 #     pb = os.path.splitext(p)[0]
 #     print(pb)
+
+#     ### GET DIMENSIONS OF IMAGE ###
+#     img = cv2.imread(os.path.join(pb + ".jpg"))
+#     imgHeight, imgWidth = img.shape[0], img.shape[1]
+#     print(imgHeight, imgWidth)
+
 #     with open(os.path.join(pb + ".txt"), 'w') as f:
 #         for o in pick:
 #             l = vars(vars(o)['bbox'])
@@ -26,21 +33,24 @@ import os
 #             ymax = l['maxy']
 
 #             c = 0
-#             xc = ((xmin + xmax)/2)/5967 #/factor
-#             yc = ((ymin + ymax)/2)/7385 #/factor
-#             w = (xmax - xmin)/5967#/factor
-#             h = (ymax - ymin)/7385#/factor
+#             xc = ((xmin + xmax)/2)/imgWidth #/factor
+#             yc = ((ymin + ymax)/2)/imgHeight #/factor
+#             w = (xmax - xmin)/imgWidth #/factor
+#             h = (ymax - ymin)/imgHeight #/factor
             
 #             f.write(f'{c} {xc} {yc} {w} {h}\n')
             
 
-########################################
+#######################################
 
 from shapely.geometry import Polygon
 import numpy as np
 import os
 import csv
 
+
+##### DEFINE SOME VARIABLES #####
+thres = 0.2
 
 
 def yolo_to_poly(box):
@@ -86,6 +96,7 @@ def calculate_iou(box_1, box_2):
 
 def findHits(annotations, detections):
     em = np.zeros((len(detections), len(annotations)), dtype=float)
+    print(em.shape)
     for i1, b1 in enumerate(detections):
         b1 = yolo_to_poly(b1)
         for i2, b2 in enumerate(annotations):
@@ -94,6 +105,11 @@ def findHits(annotations, detections):
             iou = calculate_iou(b1,b2)
             #print("iou: ", iou)
             em[i1,i2] = iou
+
+
+    #output  = np.where(np.any(em >= thres, axis = 1))
+    #print("Length ", len(output[0]))
+            #print(em)
     # How many predictions overlap with a ground truth (positives)
     #p += sum(np.any(em >= thres,axis = 1))
     # How many predicitons does not overlap with a ground truth (false positives)
@@ -111,8 +127,7 @@ def yolofile_to_lists(path, file):
             return l
 
 
-##### DEFINE SOME VARIABLES #####
-thres = 0.2
+
 
 d = 0 # detections
 a = 0 # annotations
@@ -121,15 +136,20 @@ fp = 0 # false positive
 fn = 0 # false negatives
 
 #pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\sliced\test'
-pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/anno'
+pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\sliced/test'
 annotations = [i for i in os.listdir(pathAnno) if i.endswith('.txt')]
 
 # Pickles:
 #pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705_s64\pickles'
 
 #pathDet = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\smallExp1280\results\1280_e705\runs\detect\1280_e705\labels'
-pathDet = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\debug/pickle'
+pathDet = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data/pickles'
 detections = [i for i in os.listdir(pathDet) if i.endswith('.txt')]
+
+savePath = r'scores.txt'
+
+with open(os.path.join(savePath), 'w') as f:
+    f.write(f'image,precision,recall\n')
 
 
 #### RUN OVER DETECTIONS/ANNOTATIONS ####
@@ -147,9 +167,13 @@ for det in detections:
             fn += localFN
             print("")
             print(db)
-            print(f'Local precision: {localCP/(localCP+localFP)}')
-            print(f'Local recall: {localCP/(localCP+localFN)}')
+            localPrec = localCP/(localCP+localFP)
+            localRec = localCP/(localCP+localFN)
+            print(f'Local precision: {localPrec}')
+            print(f'Local recall: {localRec}')
 
+            with open(os.path.join(savePath), 'a') as w:
+                w.write(f'{db},{localPrec},{localRec}\n')
 
 precision = cp/(cp+fp)
 recall = cp/(cp+fn)
