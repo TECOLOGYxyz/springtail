@@ -209,6 +209,14 @@ Group Images Objects A 44 66056 B 39 17479 C 16 17059 D 28 9959
 To decrease risk of objects not contained in bounding box, we expanded
 the widths and heights of boxes with 10%.
 
+The binary masks included blobs with very low areas.
+
+We must assume that small area sizes come with an increased risk of
+error.
+
+We calculated the area of each contour to see if the model accuracy was
+dependent on object area.
+
 ## Splitting data into training, validation, and testing
 
 The images varied substantially in the number of annotated objects they
@@ -372,6 +380,9 @@ original images without associated b/w image. - Several versions of some
 b/w images. Used latest version in each case. - Images have varied
 dimensions. Standardized by padding as described. This also means
 variation in size of objects (in pixels).
+
+Importantly, we underline that the error associated with small object
+areas are likely to be human error in the annotation process.
 
 # Acknowledgements
 
