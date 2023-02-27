@@ -4,8 +4,8 @@ import shutil
 import os
 
 ### READ DATA ###
-files = r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230127/data" # Image and txt files
-data = pd.read_csv(r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230127/data/statsD.txt")
+files = r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230227/data" # Image and txt files
+data = pd.read_csv(r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230227/data/statD.txt")
 objects = data['objects'].tolist()
 imageNames = data['image'].tolist()
 

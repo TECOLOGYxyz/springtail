@@ -22,8 +22,11 @@ import numpy as np
 #import matplotlib.animation as animation
 import os
 import shutil
+import math
 
-filePath = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\x_20230127'
+#filePath = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\x_20230127'
+
+filePath = r'O:\Tech_zoo\candida\3rd sending - photos F. candida tes ends\x_20230227'
 
 filesOrig = [i for i in os.listdir(filePath) if i.endswith(".jpg")]
 filesWhite = [i for i in os.listdir(filePath) if i.endswith(".tif")]
@@ -43,72 +46,90 @@ def generateBB(origName, white):
     numContours = 0
 
     with open(os.path.join(filePath, "data",  origName + ".txt"), 'w') as f:
-        
-        for c in contours:
-            M = cv2.moments(c)
-            x,y,w,h = cv2.boundingRect(c)
-            #print("xywh", x, y, w, h)
-            #print(f'BB coordinates: {x}, {y}, {w}, {h}')
-            # if M['m00'] != 0:
-            #     cx = int(M['m10']/M['m00'])
-            #     cy = int(M['m01']/M['m00'])
-            #     numContours += 1
-            # else:
-            #     cx, cy = 0, 0 #continue # excludes contours without area # To keep:  
-             
+        with open(os.path.join(filePath, "area",  origName + "_area" + ".txt"), 'w') as k:
 
-            cv2.drawContours(white, [c], -1, (0, 255, 0), 1)
-            cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),1)
-            
-            clas = "0"
-            xYolo = round((x+w/2)/whiteBinWidth, 4)
-            yYolo = round((y+h/2)/whiteBinHeight, 4)
-            wYolo = round(w/whiteBinWidth, 4)
-            hYolo = round(h/whiteBinHeight, 4)
+            for c in contours:
+                M = cv2.moments(c)
+                x,y,w,h = cv2.boundingRect(c)
+                print("M area: ", M['m00'])
+                print("Cnt area: ", cv2.contourArea(c))
 
-            wYolo += wYolo*0.1 # Expand yolo detections with 10%
-            
-            d = xYolo + (wYolo/2) - 1
-            if d > 0:
-                print("d ", d)
-                wYolo -= d
-            
-            d = xYolo - (wYolo/2)
-            if d < 0:
-                print("d ", d)
-                wYolo += d
-            
-            d = yYolo + (hYolo/2) - 1
-            if d > 0:
-                print("d ", d)
-                hYolo -= d
-            
-            d = yYolo - (wYolo/2)
-            if d < 0:
-                print("d ", d)
-                hYolo += d
 
-            # if xYolo + (wYolo/2) > 1:
-            #     wYolo -= wYolo - 1
-            # if xYolo - (wYolo/2) < 0:
-            #     wYolo += abs(xYolo-(wYolo/2))
+                #print("xywh", x, y, w, h)
+                #print(f'BB coordinates: {x}, {y}, {w}, {h}')
+                # if M['m00'] != 0:
+                #     cx = int(M['m10']/M['m00'])
+                #     cy = int(M['m01']/M['m00'])
+                #     numContours += 1
+                # else:
+                #     cx, cy = 0, 0 #continue # excludes contours without area # To keep:  
+                
 
-            # hYolo += hYolo*0.1
-            # if yYolo + (hYolo/2) > 1:
-            #     hYolo -= hYolo - 1
-            # if yYolo - (hYolo/2) < 0:
-            #     hYolo += abs(yYolo-(hYolo/2))
-            
-            f.write(f'{clas} {xYolo} {yYolo} {wYolo} {hYolo}\n')
-        
-        cv2.imwrite(os.path.join(filePath, "boxImages", "binayBoxes_" + origName + ".jpg"), white)
-        print("Image saved")
+                cv2.drawContours(white, [c], -1, (0, 255, 0), 1)
+                cv2.rectangle(white,(x,y),(x+w,y+h),(255,0,0),1)
+                
+                clas = "0"
+                # xYolo = round((x+w/2)/whiteBinWidth, 5)
+                # yYolo = round((y+h/2)/whiteBinHeight, 5)
+                # wYolo = round(w/whiteBinWidth, 5)
+                # hYolo = round(h/whiteBinHeight, 5)
 
-    with open(os.path.join(filePath, "data", "stats.txt"), 'a') as w:
-        w.write(f'{origName}, {len(contours)}\n')
 
-    print(len(contours), numContours)
-    print("Stats saved")
+                xYolo = (x+w/2)/whiteBinWidth
+                yYolo = (y+h/2)/whiteBinHeight
+                wYolo = w/whiteBinWidth
+                hYolo = h/whiteBinHeight
+
+
+                wYolo += wYolo*0.1 # Expand yolo detections with 10%
+                hYolo += hYolo*0.1
+
+                d = xYolo + (wYolo/2) - 1
+                if d > 0:
+                    print("d ", d)
+                    wYolo -= d
+                    wYolo = wYolo
+
+                d = xYolo - (wYolo/2)
+                if d < 0:
+                    print("d ", d)
+                    wYolo += d
+                    wYolo = wYolo
+
+                d = yYolo + (hYolo/2) - 1
+                if d > 0:
+                    print("d ", d)
+                    hYolo -= d
+                    hYolo = hYolo
+
+                d = yYolo - (hYolo/2)
+                if d < 0:
+                    print("d ", d)
+                    hYolo += d
+                    hYolo = hYolo
+                
+                print("YOLO: ", xYolo, yYolo, wYolo, hYolo)
+                
+                
+                xYolo = math.ceil(xYolo * 1000000.0) / 1000000.0
+                yYolo = math.ceil(yYolo * 1000000.0) / 1000000.0
+                wYolo = math.floor(wYolo * 1000000.0) / 1000000.0
+                hYolo = math.floor(hYolo * 1000000.0) / 1000000.0
+
+                print("YOLO rounded: ", xYolo, yYolo, wYolo, hYolo)
+
+
+                f.write(f'{clas} {xYolo} {yYolo} {wYolo} {hYolo}\n')
+                k.write(f'{clas} {xYolo} {yYolo} {wYolo} {hYolo} {cv2.contourArea(c)}\n')
+
+            cv2.imwrite(os.path.join(filePath, "boxImages", "binayBoxes_" + origName + ".jpg"), white)
+            print("Image saved")
+
+        with open(os.path.join(filePath, "data", "stats.txt"), 'a') as w:
+            w.write(f'{origName}, {len(contours)}\n')
+
+        print(len(contours), numContours)
+        print("Stats saved")
 
 
 for i in filesOrig:
