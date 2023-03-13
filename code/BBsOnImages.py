@@ -3,11 +3,9 @@ import os
 import csv
 
 
-
-
-pathImgs = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\sliced\test'
-pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\sliced/test'
-pathDet = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\pickles'
+pathImgs = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data\test'
+pathAnno = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data\test'
+pathDet = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\results\sliced\detectSAHI\pickles'
 
 
 imgs = [i for i in os.listdir(pathImgs) if i.endswith(".jpg")]
