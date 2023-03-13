@@ -43,7 +43,7 @@ Are things not working?
 
 [@HjalteMann](https://twitter.com/@HjalteMann) - mann@ecos.au.dk - http://tecology.xyz/
 
-[https://github.com/TECOLOGYxyz/AutomaticFlowerPhenology](https://github.com/TECOLOGYxyz/springtail)
+[https://github.com/TECOLOGYxyz/springtail](https://github.com/TECOLOGYxyz/springtail)
 
 
 
