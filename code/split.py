@@ -5,7 +5,7 @@ import os
 
 ### READ DATA ###
 files = r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230227/data" # Image and txt files
-data = pd.read_csv(r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230227/data/statD.txt")
+data = pd.read_csv(r"O:/Tech_zoo/candida/3rd sending - photos F. candida tes ends/x_20230227/data/statC.txt")
 objects = data['objects'].tolist()
 imageNames = data['image'].tolist()
 
@@ -97,21 +97,21 @@ extractGroups = [eval(str(i)[2:].replace("_", "")) for i in prob.variables() if 
 extractGroups = [[imageNames[i[0]], groupNames[i[1]]] for i in extractGroups]
 print(extractGroups)
 
-### CREATE GROUPS ###
-for g in extractGroups:
-    image = g[0]
-    group = g[1]
-    x = image[0]
+# ### CREATE GROUPS ###
+# for g in extractGroups:
+#     image = g[0]
+#     group = g[1]
+#     x = image[0]
 
-    srcImage = os.path.join(files,x,image+".jpg")
-    srcTxt = os.path.join(files,x,image+".txt")
-    dst = os.path.join(files,group)
-    print(srcImage, " goes to ", dst)
-    print(srcTxt, " goes to ", dst)
+#     srcImage = os.path.join(files,x,image+".jpg")
+#     srcTxt = os.path.join(files,x,image+".txt")
+#     dst = os.path.join(files,group)
+#     print(srcImage, " goes to ", dst)
+#     print(srcTxt, " goes to ", dst)
 
-    if not os.path.exists(dst): # Make directory if it doesn't exist
-        os.makedirs(dst)    
-    shutil.copy(srcImage, dst)
-    shutil.copy(srcTxt, dst)
+#     if not os.path.exists(dst): # Make directory if it doesn't exist
+#         os.makedirs(dst)    
+#     shutil.copy(srcImage, dst)
+#     shutil.copy(srcTxt, dst)
 
-print("All good")
+# print("All good")
