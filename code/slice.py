@@ -72,7 +72,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
     for i in ys:
         for j in xs:
             split = img[i:i+split_height, j:j+split_width]
-            cv2.imwrite(r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data/slicedTrain/{}_{}_{}.{}'.format(basename, suffix, count, frmt), split)
+            cv2.imwrite(r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data/slicedVal/{}_{}_{}.{}'.format(basename, suffix, count, frmt), split)
             #print(f'Image slice _{count}_ written')
             
             xmin =  j
@@ -83,7 +83,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
             pol = Polygon([(xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax)])
 
             slice_labels = []
-            slice_labels_path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data/slicedTrain/{}_{}_{}.txt'.format(basename, suffix, count)
+            slice_labels_path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data/slicedVal/{}_{}_{}.txt'.format(basename, suffix, count)
             for box in boxes:
                 if pol.intersects(box[1]):
                     inter = pol.intersection(box[1])        
@@ -142,7 +142,7 @@ def slice(basename, img, imgDim, anno, xs, ys):
             count += 1    
 
 
-path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data\train'
+path = r'C:\Users\au309263\OneDrive - Aarhus Universitet\Desktop\candida\data\x_20230227\data\val'
 imgPaths = [os.path.join(path, i) for i in os.listdir(path) if i.endswith('.jpg')]
 
 for image in imgPaths:

@@ -48,8 +48,8 @@ learning in messy data**
 
 Authors:
 
-Hjalte M. R. Mann^1^, Mónica André, Toke T. Høye^1^ , Jamie Alison,
-James J. Scott-Fordsmand^1^
+Hjalte M. R. Mann^1^, Mónica André, Jamie Alison, Toke T. Høye, James J.
+Scott-Fordsmand
 
 # 
 
